@@ -1,0 +1,38 @@
+name: Terraform Provision and Destroy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+    deploy_test_destroy:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+
+        - name: Set up Terraform
+          uses: hashicorp/setup-terraform@v1
+          with:
+            cli_config_credentials token: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Terraform Init
+          run: terraform init
+
+        - name: Terraform Apply
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          run: terraform apply -auto-approve -var="public_key_string=$PUBLIC_KEY"
+    
+        # Destroy the infrastructure
+        - name: Terraform Destroy
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          run: terraform destroy -auto-approve
