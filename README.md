@@ -1,6 +1,6 @@
 # AWS EKS Terraform Setup with Nginx Deployment
 
-This repository contains Terraform configurations for setting up an EKS cluster on AWS and deploying an Nginx service to it.
+This repository contains Terraform configurations for setting up an EKS cluster on AWS and deploying an Nginx service to it. It also has a remost state feature so that state can be shared with local and github workflow. 
 
 ## Structure
 
